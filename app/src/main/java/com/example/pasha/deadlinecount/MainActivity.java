@@ -18,11 +18,17 @@ public class MainActivity extends AppCompatActivity {
     TextView hoursView;
     @BindView(R.id.minutesView)
     TextView minutesView;
+    @BindView(R.id.saveDateView)
+    TextView savedData;
+
+    Calendar dateSave;
+    DataPref dataPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        dataPref = new DataPref(this);
         ButterKnife.bind(this);
         Calendar dateNow = new GregorianCalendar();
         long timeNow = dateNow.getTimeInMillis();
@@ -35,5 +41,25 @@ public class MainActivity extends AppCompatActivity {
         daysView.setText(String.valueOf(days));
         hoursView.setText(String.valueOf(hours));
         minutesView.setText(String.valueOf(minutes));
+
+        long timeSaved = dataPref.loadData();
+
+        if (timeSaved != 0){
+            long minutesSpend = ((timeNow - timeSaved) / (60 * 1000));
+            long hourSpend = ((timeNow - timeSaved) / (60 * 1000 *24));
+            StringBuilder show = new StringBuilder();
+            show.append(hourSpend);
+            show.append(" : ");
+            show.append(minutesSpend);
+            savedData.setText(show);
+        }
+        else savedData.setText(R.string.error_load_date);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dateSave = new GregorianCalendar();
+        dataPref.saveData(dateSave.getTimeInMillis());
     }
 }

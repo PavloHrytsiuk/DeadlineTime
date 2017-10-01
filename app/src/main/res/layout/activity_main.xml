@@ -33,8 +33,8 @@
 
             <TextView
                 android:id="@+id/daysView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
@@ -54,8 +54,8 @@
 
             <TextView
                 android:id="@+id/hoursView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
@@ -75,12 +75,38 @@
 
             <TextView
                 android:id="@+id/minutesView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/retread"
+                android:text="@string/save_data"
+                android:textColor="#111111"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:id="@+id/saveDateView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/retread"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
         </TableRow>
     </TableLayout>
 </LinearLayout>
