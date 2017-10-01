@@ -12,8 +12,12 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
+    @BindView(R.id.daysView)
+    TextView daysView;
     @BindView(R.id.hoursView)
     TextView hoursView;
+    @BindView(R.id.minutesView)
+    TextView minutesView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +28,12 @@ public class MainActivity extends AppCompatActivity {
         long timeNow = dateNow.getTimeInMillis();
         Calendar dateDeadline = new GregorianCalendar(2018, 0, 1, 0, 0, 0);
         long timeDeadline = dateDeadline.getTimeInMillis();
+        Long days = ((timeDeadline - timeNow) / (3600 * 1000 * 24));
         Long hours = ((timeDeadline - timeNow) / (3600 * 1000));
+        Long minutes = ((timeDeadline - timeNow) / (60 * 1000));
 
-        hoursView.setText(hours.toString());
+        daysView.setText(String.valueOf(days));
+        hoursView.setText(String.valueOf(hours));
+        minutesView.setText(String.valueOf(minutes));
     }
 }

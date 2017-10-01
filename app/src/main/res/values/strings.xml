@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">DeadlineCount</string>
-    <string name="left_hours">Left hours:</string>
+    <string name="app_name">Deadline</string>
+    <string name="left_hours">Hours:</string>
+    <string name="days">Days:</string>
+    <string name="minutes">Minutes:</string>
+    <string name="main_text">YOU HAVE:</string>
 </resources>

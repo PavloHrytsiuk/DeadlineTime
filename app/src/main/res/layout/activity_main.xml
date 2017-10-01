@@ -5,25 +5,82 @@
     android:orientation="vertical">
 
     <TableLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/left_hours"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:text="@string/main_text"
+                android:textColor="#111111"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/retread"
+                android:text="@string/days"
+                android:textColor="#111111"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/daysView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_margin="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/retread"
+                android:text="@string/left_hours"
+                android:textColor="#111111"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/hoursView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/retread"
-                android:textColor="@android:color/background_dark"
-                android:textSize="22sp" />
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/retread"
+                android:text="@string/minutes"
+                android:textColor="#111111"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/minutesView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/retread"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
         </TableRow>
     </TableLayout>
 </LinearLayout>
