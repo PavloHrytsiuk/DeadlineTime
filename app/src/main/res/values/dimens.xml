@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="retread">25dp</dimen>
+    <dimen name="retread">20dp</dimen>
 </resources>

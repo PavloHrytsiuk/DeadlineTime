@@ -94,15 +94,11 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-        </TableRow>
-
-        <TableRow>
-
             <TextView
                 android:id="@+id/saveDateView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/retread"
+                android:layout_margin="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />

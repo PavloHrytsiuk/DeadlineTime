@@ -21,45 +21,32 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.saveDateView)
     TextView savedData;
 
-    Calendar dateSave;
     DataPref dataPref;
+    DateHandler dateHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataPref = new DataPref(this);
         ButterKnife.bind(this);
-        Calendar dateNow = new GregorianCalendar();
-        long timeNow = dateNow.getTimeInMillis();
-        Calendar dateDeadline = new GregorianCalendar(2018, 0, 1, 0, 0, 0);
-        long timeDeadline = dateDeadline.getTimeInMillis();
-        Long days = ((timeDeadline - timeNow) / (3600 * 1000 * 24));
-        Long hours = ((timeDeadline - timeNow) / (3600 * 1000));
-        Long minutes = ((timeDeadline - timeNow) / (60 * 1000));
 
-        daysView.setText(String.valueOf(days));
-        hoursView.setText(String.valueOf(hours));
-        minutesView.setText(String.valueOf(minutes));
+        dataPref = new DataPref(this);
+        dateHandler = new DateHandler();
+        dateHandler.setDateSave(dataPref.loadData());
 
-        long timeSaved = dataPref.loadData();
+        daysView.setText(String.valueOf(dateHandler.getDays()));
+        hoursView.setText(String.valueOf(dateHandler.getHours()));
+        minutesView.setText(String.valueOf(dateHandler.gerMinutes()));
 
-        if (timeSaved != 0){
-            long minutesSpend = ((timeNow - timeSaved) / (60 * 1000));
-            long hourSpend = ((timeNow - timeSaved) / (60 * 1000 *24));
-            StringBuilder show = new StringBuilder();
-            show.append(hourSpend);
-            show.append(" : ");
-            show.append(minutesSpend);
-            savedData.setText(show);
-        }
-        else savedData.setText(R.string.error_load_date);
+        if (dateHandler.getSpendTime() != null) {
+            savedData.setText(dateHandler.getSpendTime());
+        } else savedData.setText(R.string.error_load_date);
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dateSave = new GregorianCalendar();
-        dataPref.saveData(dateSave.getTimeInMillis());
+        dataPref.saveData(new GregorianCalendar().getTimeInMillis());
     }
 }
