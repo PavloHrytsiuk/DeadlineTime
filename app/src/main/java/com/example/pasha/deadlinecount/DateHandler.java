@@ -1,10 +1,12 @@
 package com.example.pasha.deadlinecount;
 
+import android.util.Log;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 public class DateHandler {
+    private static final String TAG = "TAG";
     private Calendar dateNow;
     private Calendar dateDeadline;
     private long timeSaved;
@@ -12,10 +14,12 @@ public class DateHandler {
     private long timeDeadline;
 
     public DateHandler() {
-        dateNow = new GregorianCalendar(TimeZone.getDefault());
+        dateNow = new GregorianCalendar();
         dateDeadline = new GregorianCalendar(2018, 0, 1, 0, 0, 0);
         timeNow = dateNow.getTimeInMillis();
         timeDeadline = dateDeadline.getTimeInMillis();
+        Log.d(TAG, "timeNow: " + timeNow / 1000);
+        Log.d(TAG, "timeDeadline: " + timeDeadline / 1000);
     }
 
     public int gerMinutes() {

@@ -118,12 +118,5 @@
                 android:textStyle="bold" />
 
         </TableRow>
-
-        <TableRow>
-
-            <TextClock
-                android:layout_margin="@dimen/retread"
-                android:id="@+id/textClock"/>
-        </TableRow>
     </TableLayout>
 </LinearLayout>
