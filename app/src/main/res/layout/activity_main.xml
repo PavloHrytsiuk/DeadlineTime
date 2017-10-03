@@ -13,9 +13,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="@dimen/retread"
                 android:text="@string/main_text"
-                android:textColor="#111111"
+                android:textColor="#006400"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/generalDateView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_retread"
+                android:layout_marginTop="@dimen/retread"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
         </TableRow>
@@ -35,7 +45,8 @@
                 android:id="@+id/daysView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
+                android:layout_marginStart="@dimen/small_retread"
+                android:layout_marginTop="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -56,7 +67,8 @@
                 android:id="@+id/hoursView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
+                android:layout_marginStart="@dimen/small_retread"
+                android:layout_marginTop="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -77,7 +89,8 @@
                 android:id="@+id/minutesView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
+                android:layout_marginStart="@dimen/small_retread"
+                android:layout_marginTop="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -90,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/retread"
                 android:text="@string/save_data"
-                android:textColor="#111111"
+                android:textColor="#8B0000"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -98,11 +111,19 @@
                 android:id="@+id/saveDateView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
+                android:layout_marginStart="@dimen/small_retread"
+                android:layout_marginTop="@dimen/retread"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
+        </TableRow>
+
+        <TableRow>
+
+            <TextClock
+                android:layout_margin="@dimen/retread"
+                android:id="@+id/textClock"/>
         </TableRow>
     </TableLayout>
 </LinearLayout>

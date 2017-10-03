@@ -20,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     TextView minutesView;
     @BindView(R.id.saveDateView)
     TextView savedData;
+    @BindView(R.id.generalDateView)
+    TextView generalDateView;
 
     DataPref dataPref;
     DateHandler dateHandler;
@@ -34,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
         dateHandler = new DateHandler();
         dateHandler.setDateSave(dataPref.loadData());
 
+        if (dateHandler.getTimeInGeneral() != null) {
+            generalDateView.setText(dateHandler.getTimeInGeneral());
+        } else savedData.setText(R.string.error_load_date);
+
         daysView.setText(String.valueOf(dateHandler.getDays()));
         hoursView.setText(String.valueOf(dateHandler.getHours()));
         minutesView.setText(String.valueOf(dateHandler.gerMinutes()));
@@ -42,11 +48,13 @@ public class MainActivity extends AppCompatActivity {
             savedData.setText(dateHandler.getSpendTime());
         } else savedData.setText(R.string.error_load_date);
 
+        dataPref.saveData(new GregorianCalendar().getTimeInMillis());
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dataPref.saveData(new GregorianCalendar().getTimeInMillis());
+        //dataPref.saveData(new GregorianCalendar().getTimeInMillis());
     }
 }
