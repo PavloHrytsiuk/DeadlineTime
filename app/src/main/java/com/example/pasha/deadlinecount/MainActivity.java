@@ -2,6 +2,7 @@ package com.example.pasha.deadlinecount;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -22,6 +23,10 @@ public class MainActivity extends AppCompatActivity {
     TextView savedData;
     @BindView(R.id.generalDateView)
     TextView generalDateView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.progressTextView)
+    TextView progressTextView;
 
     DataPref dataPref;
     DateHandler dateHandler;
@@ -48,8 +53,11 @@ public class MainActivity extends AppCompatActivity {
             savedData.setText(dateHandler.getSpendTime());
         } else savedData.setText(R.string.error_load_date);
 
-        dataPref.saveData(new GregorianCalendar().getTimeInMillis());
+        progressBar.setProgress((int) dateHandler.getProgress());
+        String progress = String.format("%.2f", dateHandler.getProgress()) + " %";
+        progressTextView.setText(progress);
 
+        dataPref.saveData(new GregorianCalendar().getTimeInMillis());
     }
 
     @Override
