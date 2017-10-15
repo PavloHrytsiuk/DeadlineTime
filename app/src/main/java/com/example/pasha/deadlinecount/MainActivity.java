@@ -2,11 +2,11 @@ package com.example.pasha.deadlinecount;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import java.util.GregorianCalendar;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -61,5 +61,22 @@ public class MainActivity extends AppCompatActivity {
         progressTextView.setText(progress);
 
         dataPref.saveData(new GregorianCalendar().getTimeInMillis());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.actions_menu_set_deadline:
+                dateHandler.dateTimePicker(this);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

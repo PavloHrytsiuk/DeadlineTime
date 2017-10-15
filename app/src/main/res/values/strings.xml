@@ -7,4 +7,5 @@
     <string name="save_data">From last:</string>
     <string name="error_load_date">Error</string>
     <string name="spend_time">SPENT:</string>
+    <string name="set_deadline_time">Set deadline time</string>
 </resources>

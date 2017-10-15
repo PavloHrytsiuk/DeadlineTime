@@ -1,6 +1,11 @@
 package com.example.pasha.deadlinecount;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,6 +19,14 @@ public class DateHandler {
     private long timeNow;
     private long timeDeadline;
     private long timeStart;
+
+    String date_time = "";
+    int mYear;
+    int mMonth;
+    int mDay;
+
+    int mHour;
+    int mMinute;
 
     public DateHandler() {
         dateNow = new GregorianCalendar();
@@ -97,5 +110,50 @@ public class DateHandler {
     public double getProgress() {
         Log.d(TAG, "progress %: " + (timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
         return 100.0 - ((timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
+    }
+
+    public void dateTimePicker(final Context context) {
+
+        // Get Current Date
+        final Calendar c = Calendar.getInstance();
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+                        date_time = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        Log.d(TAG, "date_time: " + date_time);
+                        timePicker(context);
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+    }
+
+    public void timePicker(Context context) {
+        // Get Current Time
+        final Calendar c = Calendar.getInstance();
+        mHour = c.get(Calendar.HOUR_OF_DAY);
+        mMinute = c.get(Calendar.MINUTE);
+
+        // Launch Time Picker Dialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context,
+                new TimePickerDialog.OnTimeSetListener() {
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+                        mHour = hourOfDay;
+                        mMinute = minute;
+
+                        Log.d(TAG, "mHour/mMinute: " + mHour + " : " + mMinute);
+
+                    }
+                }, mHour, mMinute, true);
+        timePickerDialog.show();
     }
 }
