@@ -42,7 +42,7 @@ public class DateHandler {
         timeSaved = time;
     }
 
-    public StringBuilder getSpendTime() {
+    public StringBuilder getSpentTimeFromLastVisit() {
         if (timeSaved != 0) {
             long hourSpend = ((timeNow - timeSaved) / (1000 * 3600));
             long minutesSpend = (((timeNow - timeSaved) / (60 * 1000)) % 60);
@@ -56,6 +56,23 @@ public class DateHandler {
             show.append("s");
             return show;
         } else return null;
+    }
+
+    public StringBuilder getSpentTime() {
+        long daySpend = ((timeNow - timeStart) / (3600 * 1000 * 24));
+        long hourSpend = ((timeNow - timeStart) / (1000 * 3600) % 24);
+        long minutesSpend = (((timeNow - timeStart) / (60 * 1000)) % 60);
+        long secondSpend = (((timeNow - timeStart) / (1000))) % 60;
+        StringBuilder show = new StringBuilder();
+        show.append(daySpend);
+        show.append("d : ");
+        show.append(hourSpend);
+        show.append("h : ");
+        show.append(minutesSpend);
+        show.append("m : ");
+        show.append(secondSpend);
+        show.append("s");
+        return show;
     }
 
     public StringBuilder getTimeInGeneral() {

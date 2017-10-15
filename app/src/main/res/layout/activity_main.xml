@@ -102,8 +102,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/retread"
-                android:text="@string/save_data"
+                android:text="@string/spend_time"
                 android:textColor="#8B0000"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/spendTimeView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_retread"
+                android:layout_marginTop="@dimen/retread"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/retread"
+                android:text="@string/save_data"
+                android:textColor="#111111"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 

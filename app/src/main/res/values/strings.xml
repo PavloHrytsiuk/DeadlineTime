@@ -3,7 +3,8 @@
     <string name="left_hours">Hours:</string>
     <string name="days">Days:</string>
     <string name="minutes">Minutes:</string>
-    <string name="main_text">YOU HAVE:</string>
-    <string name="save_data">Spend time:</string>
+    <string name="main_text">HAVE:</string>
+    <string name="save_data">From last:</string>
     <string name="error_load_date">Error</string>
+    <string name="spend_time">SPENT:</string>
 </resources>

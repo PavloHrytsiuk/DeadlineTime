@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import butterknife.BindView;
@@ -27,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     ProgressBar progressBar;
     @BindView(R.id.progressTextView)
     TextView progressTextView;
+    @BindView(R.id.spendTimeView)
+    TextView spentTime;
 
     DataPref dataPref;
     DateHandler dateHandler;
@@ -49,8 +50,10 @@ public class MainActivity extends AppCompatActivity {
         hoursView.setText(String.valueOf(dateHandler.getHours()));
         minutesView.setText(String.valueOf(dateHandler.gerMinutes()));
 
-        if (dateHandler.getSpendTime() != null) {
-            savedData.setText(dateHandler.getSpendTime());
+        spentTime.setText(dateHandler.getSpentTime());
+
+        if (dateHandler.getSpentTimeFromLastVisit() != null) {
+            savedData.setText(dateHandler.getSpentTimeFromLastVisit());
         } else savedData.setText(R.string.error_load_date);
 
         progressBar.setProgress((int) dateHandler.getProgress());
@@ -58,11 +61,5 @@ public class MainActivity extends AppCompatActivity {
         progressTextView.setText(progress);
 
         dataPref.saveData(new GregorianCalendar().getTimeInMillis());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //dataPref.saveData(new GregorianCalendar().getTimeInMillis());
     }
 }
