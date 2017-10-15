@@ -9,15 +9,19 @@ public class DateHandler {
     private static final String TAG = "TAG";
     private Calendar dateNow;
     private Calendar dateDeadline;
+    private Calendar dateStart;
     private long timeSaved;
     private long timeNow;
     private long timeDeadline;
+    private long timeStart;
 
     public DateHandler() {
         dateNow = new GregorianCalendar();
         dateDeadline = new GregorianCalendar(2018, 0, 1, 0, 0, 0);
+        dateStart = new GregorianCalendar(2017, 8, 23, 0, 0, 0);
         timeNow = dateNow.getTimeInMillis();
         timeDeadline = dateDeadline.getTimeInMillis();
+        timeStart = dateStart.getTimeInMillis();
         Log.d(TAG, "timeNow: " + timeNow / 1000);
         Log.d(TAG, "timeDeadline: " + timeDeadline / 1000);
     }
@@ -71,5 +75,10 @@ public class DateHandler {
             show.append("s");
             return show;
         } else return null;
+    }
+
+    public double getProgress() {
+        Log.d(TAG, "progress %: " + (timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
+        return 100.0 - ((timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
     }
 }

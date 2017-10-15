@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="retread">16dp</dimen>
+    <dimen name="retread">15dp</dimen>
     <dimen name="small_retread">6dp</dimen>
 </resources>

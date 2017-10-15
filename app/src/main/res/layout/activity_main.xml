@@ -6,7 +6,7 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TableRow>
 
@@ -119,4 +119,25 @@
 
         </TableRow>
     </TableLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_retread" />
+
+        <TextView
+            android:id="@+id/progressTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/retread"
+            android:textSize="18sp"
+            android:textStyle="italic" />
+    </FrameLayout>
 </LinearLayout>
