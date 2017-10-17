@@ -6,7 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import java.util.GregorianCalendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.spendTimeView)
     TextView spentTime;
 
-    DataPref dataPref;
-    DateHandler dateHandler;
+    private DataPref dataPref;
+    private DateHandler dateHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +41,15 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         dataPref = new DataPref(this);
-        dateHandler = new DateHandler();
-        dateHandler.setDateSave(dataPref.loadData());
+        dateHandler = new DateHandler(dataPref);
+        dateHandler.attachView(this);
 
+        setDate();
+
+        dataPref.saveData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF);
+    }
+
+    public void setDate() {
         if (dateHandler.getTimeInGeneral() != null) {
             generalDateView.setText(dateHandler.getTimeInGeneral());
         } else savedData.setText(R.string.error_load_date);
@@ -49,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         daysView.setText(String.valueOf(dateHandler.getDays()));
         hoursView.setText(String.valueOf(dateHandler.getHours()));
         minutesView.setText(String.valueOf(dateHandler.gerMinutes()));
-
         spentTime.setText(dateHandler.getSpentTime());
 
         if (dateHandler.getSpentTimeFromLastVisit() != null) {
@@ -59,8 +66,6 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setProgress((int) dateHandler.getProgress());
         String progress = String.format("%.2f", dateHandler.getProgress()) + " %";
         progressTextView.setText(progress);
-
-        dataPref.saveData(new GregorianCalendar().getTimeInMillis());
     }
 
     @Override

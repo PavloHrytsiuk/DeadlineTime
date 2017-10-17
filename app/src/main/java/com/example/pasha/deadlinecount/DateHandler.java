@@ -11,30 +11,35 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class DateHandler {
+
+    static final String SAVE_PREF = "Save data";
+    static final String DEADLINE_PREF = "Deadline data";
+    static final String START_PREF = "Start data";
+
     private static final String TAG = "TAG";
-    private Calendar dateNow;
-    private Calendar dateDeadline;
-    private Calendar dateStart;
+    private final Calendar dateNow;
     private long timeSaved;
-    private long timeNow;
+    private final long timeNow;
     private long timeDeadline;
     private long timeStart;
+    private DataPref dataPref;
+    private MainActivity view;
 
-    String date_time = "";
-    int mYear;
-    int mMonth;
-    int mDay;
+    public DateHandler(DataPref dataPref) {
+        this.dataPref = dataPref;
 
-    int mHour;
-    int mMinute;
-
-    public DateHandler() {
         dateNow = new GregorianCalendar();
-        dateDeadline = new GregorianCalendar(2018, 0, 1, 0, 0, 0);
-        dateStart = new GregorianCalendar(2017, 8, 23, 0, 0, 0);
         timeNow = dateNow.getTimeInMillis();
-        timeDeadline = dateDeadline.getTimeInMillis();
-        timeStart = dateStart.getTimeInMillis();
+
+        if ((timeSaved = dataPref.loadData(SAVE_PREF)) == 0) {
+            timeSaved = timeNow;
+        }
+        if ((timeDeadline = dataPref.loadData(DEADLINE_PREF)) == 0) {
+            timeDeadline = timeNow;
+        }
+        if ((timeStart = dataPref.loadData(START_PREF)) == 0) {
+            timeStart = timeNow;
+        }
         Log.d(TAG, "timeNow: " + timeNow / 1000);
         Log.d(TAG, "timeDeadline: " + timeDeadline / 1000);
     }
@@ -49,10 +54,6 @@ public class DateHandler {
 
     public int getDays() {
         return (int) ((timeDeadline - timeNow) / (3600 * 1000 * 24));
-    }
-
-    public void setDateSave(long time) {
-        timeSaved = time;
     }
 
     public StringBuilder getSpentTimeFromLastVisit() {
@@ -89,22 +90,20 @@ public class DateHandler {
     }
 
     public StringBuilder getTimeInGeneral() {
-        if (timeSaved != 0) {
-            long daySpend = ((timeDeadline - timeNow) / (3600 * 1000 * 24));
-            long hourSpend = (((timeDeadline - timeNow) / (1000 * 3600)) % 24);
-            long minutesSpend = (((timeDeadline - timeNow) / (60 * 1000)) % 60);
-            long secondSpend = (((timeDeadline - timeNow) / (1000))) % 60;
-            StringBuilder show = new StringBuilder();
-            show.append(daySpend);
-            show.append("d : ");
-            show.append(hourSpend);
-            show.append("h : ");
-            show.append(minutesSpend);
-            show.append("m : ");
-            show.append(secondSpend);
-            show.append("s");
-            return show;
-        } else return null;
+        long daySpend = ((timeDeadline - timeNow) / (3600 * 1000 * 24));
+        long hourSpend = (((timeDeadline - timeNow) / (1000 * 3600)) % 24);
+        long minutesSpend = (((timeDeadline - timeNow) / (60 * 1000)) % 60);
+        long secondSpend = (((timeDeadline - timeNow) / (1000))) % 60;
+        StringBuilder show = new StringBuilder();
+        show.append(daySpend);
+        show.append("d : ");
+        show.append(hourSpend);
+        show.append("h : ");
+        show.append(minutesSpend);
+        show.append("m : ");
+        show.append(secondSpend);
+        show.append("s");
+        return show;
     }
 
     public double getProgress() {
@@ -112,48 +111,52 @@ public class DateHandler {
         return 100.0 - ((timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
     }
 
+    public void loadNewDeadlineDate(GregorianCalendar calendar) {
+        timeDeadline = calendar.getTimeInMillis();
+        timeStart = timeNow;
+        timeSaved = timeNow;
+        dataPref.saveData(timeDeadline, DEADLINE_PREF);
+        dataPref.saveData(timeNow, START_PREF);
+        view.setDate();
+        Log.d(TAG, "General time: " + calendar.getTime());
+    }
+
     public void dateTimePicker(final Context context) {
 
         // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
+        final int mYear = dateNow.get(Calendar.YEAR);
+        final int mMonth = dateNow.get(Calendar.MONTH);
+        final int mDay = dateNow.get(Calendar.DAY_OF_MONTH);
+        final int mHour = dateNow.get(Calendar.HOUR_OF_DAY);
+        final int mMinute = dateNow.get(Calendar.MINUTE);
+        final GregorianCalendar calendar = new GregorianCalendar();
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    public void onDateSet(DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
 
-                        date_time = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                        Log.d(TAG, "date_time: " + date_time);
-                        timePicker(context);
+                        Log.d(TAG, "date_time: " + dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        // Launch Time Picker Dialog
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(context,
+                                new TimePickerDialog.OnTimeSetListener() {
+
+                                    @Override
+                                    public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
+
+                                        calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute, 0);
+                                        loadNewDeadlineDate(calendar);
+                                        Log.d(TAG, "mHour/mMinute: " + mHour + " : " + mMinute);
+                                    }
+                                }, mHour, mMinute, true);
+                        timePickerDialog.show();
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
     }
 
-    public void timePicker(Context context) {
-        // Get Current Time
-        final Calendar c = Calendar.getInstance();
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
-
-        // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(context,
-                new TimePickerDialog.OnTimeSetListener() {
-
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-                        mHour = hourOfDay;
-                        mMinute = minute;
-
-                        Log.d(TAG, "mHour/mMinute: " + mHour + " : " + mMinute);
-
-                    }
-                }, mHour, mMinute, true);
-        timePickerDialog.show();
+    public void attachView(final MainActivity view) {
+        this.view = view;
     }
 }

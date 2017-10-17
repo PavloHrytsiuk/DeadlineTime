@@ -1,12 +1,11 @@
 package com.example.pasha.deadlinecount;
 
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 public class DataPref {
-    private static final String SAVE_PREF = "Save data";
     private SharedPreferences preferences;
     private Context context;
 
@@ -15,15 +14,15 @@ public class DataPref {
     }
 
 
-    public void saveData(Long data) {
+    public void saveData(@NonNull Long data, @NonNull String name) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor shEd = preferences.edit();
-        shEd.putLong(SAVE_PREF, data);
+        shEd.putLong(name, data);
         shEd.apply();
     }
 
-    public Long loadData() {
+    public Long loadData(@NonNull String name) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getLong(SAVE_PREF, 0);
+        return preferences.getLong(name, 0);
     }
 }
