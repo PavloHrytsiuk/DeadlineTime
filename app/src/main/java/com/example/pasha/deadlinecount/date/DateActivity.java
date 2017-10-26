@@ -1,4 +1,4 @@
-package com.example.pasha.deadlinecount;
+package com.example.pasha.deadlinecount.date;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,12 +7,14 @@ import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.pasha.deadlinecount.R;
+
 import java.util.GregorianCalendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class DateActivity extends AppCompatActivity {
 
     @BindView(R.id.daysView)
     TextView daysView;
@@ -31,22 +33,29 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.spendTimeView)
     TextView spentTime;
 
+    private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
+    private static final String NEW_DEADLINE_COUNTER = "New deadline counter";
+
     private DataPref dataPref;
     private DateHandler dateHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_date);
         ButterKnife.bind(this);
+        String name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
+        setTitle(name);
 
         dataPref = new DataPref(this);
-        dateHandler = new DateHandler(dataPref);
+        dateHandler = new DateHandler(dataPref, name);
         dateHandler.attachView(this);
 
-        setDate();
+        if (getIntent().getBooleanExtra(NEW_DEADLINE_COUNTER, false)) {
+            dateHandler.dateTimePicker(this);
+        } else setDate();
 
-        dataPref.saveData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF);
+        dataPref.saveLongData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF + name);
     }
 
     public void setDate() {
@@ -70,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_date_main, menu);
         return true;
     }
 

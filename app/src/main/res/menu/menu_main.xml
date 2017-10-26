@@ -2,8 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    tools:context="com.example.pasha.deadlinecount.main.MainActivity">
     <item
-        android:title="@string/set_deadline_time"
-        android:id="@+id/actions_menu_set_deadline"/>
+        android:icon="@drawable/ic_control_point_black_18dp"
+        android:id="@+id/action_Add"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"
+        android:title="@string/add"/>
+
 </menu>

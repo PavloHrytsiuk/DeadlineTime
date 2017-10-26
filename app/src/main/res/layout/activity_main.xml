@@ -1,165 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/default_margin"
+    tools:context="com.example.pasha.deadlinecount.main.MainActivity">
 
-    <TableLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TableRow>
+    </android.support.v7.widget.RecyclerView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
-                android:text="@string/main_text"
-                android:textColor="#006400"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/generalDateView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_retread"
-                android:layout_marginTop="@dimen/retread"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
-                android:text="@string/days"
-                android:textColor="#111111"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/daysView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_retread"
-                android:layout_marginTop="@dimen/retread"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
-                android:text="@string/left_hours"
-                android:textColor="#111111"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/hoursView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_retread"
-                android:layout_marginTop="@dimen/retread"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
-                android:text="@string/minutes"
-                android:textColor="#111111"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/minutesView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_retread"
-                android:layout_marginTop="@dimen/retread"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
-                android:text="@string/spend_time"
-                android:textColor="#8B0000"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/spendTimeView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_retread"
-                android:layout_marginTop="@dimen/retread"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/retread"
-                android:text="@string/save_data"
-                android:textColor="#111111"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/saveDateView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_retread"
-                android:layout_marginTop="@dimen/retread"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="22sp"
-                android:textStyle="bold" />
-
-        </TableRow>
-    </TableLayout>
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_retread" />
-
-        <TextView
-            android:id="@+id/progressTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="@dimen/retread"
-            android:textSize="18sp"
-            android:textStyle="italic" />
-    </FrameLayout>
 </LinearLayout>

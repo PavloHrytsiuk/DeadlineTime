@@ -1,8 +1,9 @@
-package com.example.pasha.deadlinecount;
+package com.example.pasha.deadlinecount.date;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -23,21 +24,23 @@ public class DateHandler {
     private long timeDeadline;
     private long timeStart;
     private DataPref dataPref;
-    private MainActivity view;
+    private DateActivity view;
+    private final String name;
 
-    public DateHandler(DataPref dataPref) {
+    public DateHandler(@NonNull final DataPref dataPref, @NonNull final String name) {
         this.dataPref = dataPref;
+        this.name = name;
 
         dateNow = new GregorianCalendar();
         timeNow = dateNow.getTimeInMillis();
 
-        if ((timeSaved = dataPref.loadData(SAVE_PREF)) == 0) {
+        if ((timeSaved = dataPref.loadLongData(SAVE_PREF + name)) == 0) {
             timeSaved = timeNow;
         }
-        if ((timeDeadline = dataPref.loadData(DEADLINE_PREF)) == 0) {
+        if ((timeDeadline = dataPref.loadLongData(DEADLINE_PREF + name)) == 0) {
             timeDeadline = timeNow;
         }
-        if ((timeStart = dataPref.loadData(START_PREF)) == 0) {
+        if ((timeStart = dataPref.loadLongData(START_PREF + name)) == 0) {
             timeStart = timeNow;
         }
         Log.d(TAG, "timeNow: " + timeNow / 1000);
@@ -115,8 +118,8 @@ public class DateHandler {
         timeDeadline = calendar.getTimeInMillis();
         timeStart = timeNow;
         timeSaved = timeNow;
-        dataPref.saveData(timeDeadline, DEADLINE_PREF);
-        dataPref.saveData(timeNow, START_PREF);
+        dataPref.saveLongData(timeDeadline, DEADLINE_PREF + name);
+        dataPref.saveLongData(timeNow, START_PREF + name);
         view.setDate();
         Log.d(TAG, "General time: " + calendar.getTime());
     }
@@ -156,7 +159,7 @@ public class DateHandler {
         datePickerDialog.show();
     }
 
-    public void attachView(final MainActivity view) {
+    public void attachView(final DateActivity view) {
         this.view = view;
     }
 }
