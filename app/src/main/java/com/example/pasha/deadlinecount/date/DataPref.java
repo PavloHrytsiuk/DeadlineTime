@@ -26,7 +26,7 @@ public class DataPref {
         return preferences.getLong(name, 0);
     }
 
-    public void saveSringData(@NonNull String data, @NonNull String name) {
+    public void saveStringData(@NonNull String data, @NonNull String name) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor shEd = preferences.edit();
         shEd.putString(name, data);

@@ -34,7 +34,6 @@ public class DateActivity extends AppCompatActivity {
     TextView spentTime;
 
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
-    private static final String NEW_DEADLINE_COUNTER = "New deadline counter";
 
     private DataPref dataPref;
     private DateHandler dateHandler;
@@ -51,9 +50,7 @@ public class DateActivity extends AppCompatActivity {
         dateHandler = new DateHandler(dataPref, name);
         dateHandler.attachView(this);
 
-        if (getIntent().getBooleanExtra(NEW_DEADLINE_COUNTER, false)) {
-            dateHandler.dateTimePicker(this);
-        } else setDate();
+        setDate();
 
         dataPref.saveLongData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF + name);
     }

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.pasha.deadlinecount.main.DeadlineCallbacks;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -26,6 +28,7 @@ public class DateHandler {
     private DataPref dataPref;
     private DateActivity view;
     private final String name;
+    DeadlineCallbacks callbacks;
 
     public DateHandler(@NonNull final DataPref dataPref, @NonNull final String name) {
         this.dataPref = dataPref;
@@ -114,17 +117,25 @@ public class DateHandler {
         return 100.0 - ((timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
     }
 
+    public void setCallbacks(DeadlineCallbacks callbacks) {
+        this.callbacks = callbacks;
+    }
+
     public void loadNewDeadlineDate(GregorianCalendar calendar) {
         timeDeadline = calendar.getTimeInMillis();
         timeStart = timeNow;
         timeSaved = timeNow;
         dataPref.saveLongData(timeDeadline, DEADLINE_PREF + name);
         dataPref.saveLongData(timeNow, START_PREF + name);
-        view.setDate();
+        if (view != null) {
+            view.setDate();
+        } else {
+            callbacks.onCreateDateActivity();
+        }
         Log.d(TAG, "General time: " + calendar.getTime());
     }
 
-    public void dateTimePicker(final Context context) {
+    public  void dateTimePicker(final Context context) {
 
         // Get Current Date
         final int mYear = dateNow.get(Calendar.YEAR);
