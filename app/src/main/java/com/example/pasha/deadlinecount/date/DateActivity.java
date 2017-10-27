@@ -1,13 +1,18 @@
 package com.example.pasha.deadlinecount.date;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pasha.deadlinecount.R;
+import com.example.pasha.deadlinecount.main.MainActivity;
 
 import java.util.GregorianCalendar;
 
@@ -37,13 +42,14 @@ public class DateActivity extends AppCompatActivity {
 
     private DataPref dataPref;
     private DateHandler dateHandler;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
         ButterKnife.bind(this);
-        String name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
+        name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
         setTitle(name);
 
         dataPref = new DataPref(this);
@@ -86,6 +92,36 @@ public class DateActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.actions_menu_set_deadline:
                 dateHandler.dateTimePicker(this);
+                break;
+            case R.id.actions_menu_delete:
+                AlertDialog.Builder ad = new AlertDialog.Builder(DateActivity.this);
+                String title = "Delete this contact";
+                String message = "Are you sure?";
+                String button1String = "NO";
+                String button2String = "YES";
+                ad =
+                        ad.setTitle(title);
+                ad.setMessage(message);
+                ad.setPositiveButton(button1String, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                ad.setNegativeButton(button2String, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        Intent intent = new Intent();
+                        intent.putExtra(NAME_DEADLINE_COUNTER, name);
+                        dateHandler.deleteAllData();
+                        Toast.makeText(DateActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                        setResult(MainActivity.RESULT_DELETE_CONTACT, intent);
+                        finish();
+                    }
+                });
+                ad.setCancelable(true);
+                ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+                ad.show();
                 break;
         }
         return super.onOptionsItemSelected(item);

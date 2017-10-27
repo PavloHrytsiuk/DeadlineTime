@@ -37,4 +37,9 @@ public class DataPref {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(name, "");
     }
+
+    public void deleteStringData(@NonNull String name) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().remove(name).apply();
+    }
 }

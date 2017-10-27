@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
     private static final String DEADLINE_PREF = "Json from deadline names";
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
+    public static final int RESULT_DELETE_CONTACT = 1;
 
     @BindView(R.id.recycleView)
     RecyclerView recyclerView;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     private Gson gson;
     private DateHandler dateHandler;
     private String editTextValue;
+    private DeadlinesAdapter adapter;
 
 
     @Override
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
-        DeadlinesAdapter adapter = new DeadlinesAdapter(deadlineNames, this);
+        adapter = new DeadlinesAdapter(deadlineNames, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -103,6 +105,20 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        if (requestCode == RESULT_DELETE_CONTACT) {
+            deadlineNames.remove(data.getStringExtra(NAME_DEADLINE_COUNTER));
+            deadlineNames.remove(data.getStringExtra(NAME_DEADLINE_COUNTER));
+            adapter.notifyDataSetChanged();
+            saveChanges();
+        }
+    }
+
     private void saveChanges() {
         String jsonDeadlineNames = gson.toJson(deadlineNames);
         dataPref.saveStringData(jsonDeadlineNames, DEADLINE_PREF);
@@ -113,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     public void onClick(int position) {
         Intent intent = new Intent(MainActivity.this, DateActivity.class);
         intent.putExtra(NAME_DEADLINE_COUNTER, deadlineNames.get(position));
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     @Override
@@ -122,6 +138,6 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         saveChanges();
         Intent intent = new Intent(MainActivity.this, DateActivity.class);
         intent.putExtra(NAME_DEADLINE_COUNTER, editTextValue);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 }

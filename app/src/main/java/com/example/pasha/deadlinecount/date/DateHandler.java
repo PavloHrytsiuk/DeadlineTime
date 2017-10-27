@@ -135,7 +135,7 @@ public class DateHandler {
         Log.d(TAG, "General time: " + calendar.getTime());
     }
 
-    public  void dateTimePicker(final Context context) {
+    public void dateTimePicker(final Context context) {
 
         // Get Current Date
         final int mYear = dateNow.get(Calendar.YEAR);
@@ -172,5 +172,11 @@ public class DateHandler {
 
     public void attachView(final DateActivity view) {
         this.view = view;
+    }
+
+    public void deleteAllData() {
+        dataPref.deleteStringData(SAVE_PREF + name);
+        dataPref.deleteStringData(DEADLINE_PREF + name);
+        dataPref.deleteStringData(START_PREF + name);
     }
 }
