@@ -10,7 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.pasha.deadlinecount.R;
 import com.example.pasha.deadlinecount.date.DataPref;
@@ -76,31 +79,45 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         switch (item.getItemId()) {
             case R.id.action_Add:
 
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
                 final EditText edittext = new EditText(MainActivity.this);
-                alert.setMessage("Please press name:");
-                alert.setTitle("New Deadline Counter");
+                edittext.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                final AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setView(edittext)
+                        .setTitle(" Create new deadline counter")
+                        .setMessage("Please press name:")
+                        .setPositiveButton("Yes", null)
+                        .setNegativeButton("No", null)
+                        .create();
 
-                alert.setView(edittext);
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+                        Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-
-                        editTextValue = edittext.getText().toString();
-                        dateHandler = new DateHandler(dataPref, editTextValue);
-                        dateHandler.setCallbacks(MainActivity.this);
-                        dateHandler.dateTimePicker(MainActivity.this);
+                                editTextValue = edittext.getText().toString();
+                                if (editTextValue.isEmpty()) {
+                                    Toast.makeText(MainActivity.this, "Name is empty!" + "\n" +
+                                            "Please try again", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    if (deadlineNames.contains(editTextValue)) {
+                                        Toast.makeText(MainActivity.this, "Already exist!" + "\n" +
+                                                "Please try again", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        dateHandler = new DateHandler(dataPref, editTextValue);
+                                        dateHandler.setCallbacks(MainActivity.this);
+                                        dateHandler.dateTimePicker(MainActivity.this);
+                                        dialog.dismiss();
+                                    }
+                                }
+                            }
+                        });
                     }
                 });
-
-                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // action ON
-                    }
-                });
-
-                alert.show();
+                dialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
