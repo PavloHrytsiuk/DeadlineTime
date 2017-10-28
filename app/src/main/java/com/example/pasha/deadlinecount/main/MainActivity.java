@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,13 +80,13 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         switch (item.getItemId()) {
             case R.id.action_Add:
 
-                final EditText edittext = new EditText(MainActivity.this);
-                edittext.setInputType(android.text.InputType.TYPE_CLASS_TEXT
-                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                final EditText editText = new EditText(MainActivity.this);
+                editText.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 final AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setView(edittext)
+                        .setView(editText)
                         .setTitle(" Create new deadline counter")
-                        .setMessage("Please press name:")
+                        .setMessage("Please press description:")
                         .setPositiveButton("Yes", null)
                         .setNegativeButton("No", null)
                         .create();
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
                             @Override
                             public void onClick(View view) {
 
-                                editTextValue = edittext.getText().toString().trim();
+                                editTextValue = editText.getText().toString().trim();
                                 if (editTextValue.length() == 0) {
                                     Toast.makeText(MainActivity.this, "Name is empty!" + "\n" +
                                             "Please try again", Toast.LENGTH_SHORT).show();

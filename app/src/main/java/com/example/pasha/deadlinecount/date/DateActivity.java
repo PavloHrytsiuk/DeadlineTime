@@ -37,6 +37,8 @@ public class DateActivity extends AppCompatActivity {
     TextView progressTextView;
     @BindView(R.id.spendTimeView)
     TextView spentTime;
+    @BindView(R.id.textView)
+    TextView textView;
 
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
 
@@ -50,7 +52,8 @@ public class DateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_date);
         ButterKnife.bind(this);
         name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
-        setTitle(name);
+        //setTitle(name);
+        textView.setText(name);
 
         dataPref = new DataPref(this);
         dateHandler = new DateHandler(dataPref, name);

@@ -145,13 +145,12 @@ public class DateHandler {
 
     public void loadNewDeadlineDate(GregorianCalendar calendar) {
         timeDeadline = calendar.getTimeInMillis();
-        timeStart = timeNow;
         timeSaved = timeNow;
         dataPref.saveLongData(timeDeadline, DEADLINE_PREF + name);
-        dataPref.saveLongData(timeNow, START_PREF + name);
         if (view != null) {
             view.setDate();
         } else {
+            dataPref.saveLongData(timeNow, START_PREF + name);
             callbacks.onCreateDateActivity();
         }
         Log.d(TAG, "General time: " + calendar.getTime());

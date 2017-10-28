@@ -11,11 +11,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:hint="Enter comments(Optional)"
-        android:inputType="textMultiLine"
-        android:lines="8"
-        android:maxLines="3"
-        android:minLines="6"
         android:scrollbars="vertical" />
 
 </LinearLayout>
