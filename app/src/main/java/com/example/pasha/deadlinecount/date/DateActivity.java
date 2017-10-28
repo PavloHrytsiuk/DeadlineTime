@@ -97,19 +97,14 @@ public class DateActivity extends AppCompatActivity {
                 dateHandler.dateTimePicker(this);
                 break;
             case R.id.actions_menu_delete:
-                AlertDialog.Builder ad = new AlertDialog.Builder(DateActivity.this);
-                String title = "Delete this contact";
-                String message = "Are you sure?";
-                String button1String = "NO";
-                String button2String = "YES";
-                ad =
-                        ad.setTitle(title);
-                ad.setMessage(message);
-                ad.setPositiveButton(button1String, new DialogInterface.OnClickListener() {
+                final AlertDialog.Builder ad = new AlertDialog.Builder(DateActivity.this);
+                ad.setTitle("Delete this contact");
+                ad.setMessage("Are you sure?");
+                ad.setPositiveButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                     }
                 });
-                ad.setNegativeButton(button2String, new DialogInterface.OnClickListener() {
+                ad.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int arg1) {
                         Intent intent = new Intent();
                         intent.putExtra(NAME_DEADLINE_COUNTER, name);

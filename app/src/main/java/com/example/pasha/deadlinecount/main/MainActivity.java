@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
@@ -83,12 +84,13 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
                 final EditText editText = new EditText(MainActivity.this);
                 editText.setInputType(android.text.InputType.TYPE_CLASS_TEXT
                         | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(100)});
                 final AlertDialog dialog = new AlertDialog.Builder(this)
                         .setView(editText)
-                        .setTitle(" Create new deadline counter")
+                        .setTitle("Create new deadline counter")
                         .setMessage("Please press description:")
-                        .setPositiveButton("Yes", null)
                         .setNegativeButton("No", null)
+                        .setPositiveButton("Yes", null)
                         .create();
 
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
                                 editTextValue = editText.getText().toString().trim();
                                 if (editTextValue.length() == 0) {
-                                    Toast.makeText(MainActivity.this, "Name is empty!" + "\n" +
+                                    Toast.makeText(MainActivity.this, "Description is empty!" + "\n" +
                                             "Please try again", Toast.LENGTH_SHORT).show();
                                 } else {
                                     if (deadlineNames.contains(editTextValue)) {
