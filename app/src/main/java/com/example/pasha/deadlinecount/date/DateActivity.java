@@ -68,7 +68,7 @@ public class DateActivity extends AppCompatActivity {
 
         daysView.setText(String.valueOf(dateHandler.getDays()));
         hoursView.setText(String.valueOf(dateHandler.getHours()));
-        minutesView.setText(String.valueOf(dateHandler.gerMinutes()));
+        minutesView.setText(String.valueOf(dateHandler.getMinutes()));
         spentTime.setText(dateHandler.getSpentTime());
 
         if (dateHandler.getSpentTimeFromLastVisit() != null) {

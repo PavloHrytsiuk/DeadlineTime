@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
                             @Override
                             public void onClick(View view) {
 
-                                editTextValue = edittext.getText().toString();
-                                if (editTextValue.isEmpty()) {
+                                editTextValue = edittext.getText().toString().trim();
+                                if (editTextValue.length() == 0) {
                                     Toast.makeText(MainActivity.this, "Name is empty!" + "\n" +
                                             "Please try again", Toast.LENGTH_SHORT).show();
                                 } else {
