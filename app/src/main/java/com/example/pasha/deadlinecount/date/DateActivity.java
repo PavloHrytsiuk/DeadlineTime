@@ -1,13 +1,18 @@
 package com.example.pasha.deadlinecount.date;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pasha.deadlinecount.R;
+import com.example.pasha.deadlinecount.main.MainActivity;
 
 import java.util.GregorianCalendar;
 
@@ -32,29 +37,39 @@ public class DateActivity extends AppCompatActivity {
     TextView progressTextView;
     @BindView(R.id.spendTimeView)
     TextView spentTime;
+    @BindView(R.id.textView)
+    TextView textView;
 
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
-    private static final String NEW_DEADLINE_COUNTER = "New deadline counter";
+    private static final String DESCRIPTION_DEADLINE_COUNTER = "Description of deadline counter";
+    private static final String SAVE_DESCRIPTION = "Save description";
 
     private DataPref dataPref;
     private DateHandler dateHandler;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
         ButterKnife.bind(this);
-        String name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
-        setTitle(name);
-
+        name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
         dataPref = new DataPref(this);
         dateHandler = new DateHandler(dataPref, name);
         dateHandler.attachView(this);
 
-        if (getIntent().getBooleanExtra(NEW_DEADLINE_COUNTER, false)) {
-            dateHandler.dateTimePicker(this);
-        } else setDate();
-
+        String description;
+        if ((description = getIntent().getStringExtra(DESCRIPTION_DEADLINE_COUNTER)) != null) {
+            textView.setText(description);
+            dataPref.saveStringData(description, SAVE_DESCRIPTION + name);
+        } else {
+            String buf = dataPref.loadStringData(SAVE_DESCRIPTION + name);
+            if (!buf.isEmpty()) {
+                textView.setText(buf);
+            } else textView.setText(name);
+        }
+        setTitle(name);
+        setDate();
         dataPref.saveLongData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF + name);
     }
 
@@ -65,7 +80,7 @@ public class DateActivity extends AppCompatActivity {
 
         daysView.setText(String.valueOf(dateHandler.getDays()));
         hoursView.setText(String.valueOf(dateHandler.getHours()));
-        minutesView.setText(String.valueOf(dateHandler.gerMinutes()));
+        minutesView.setText(String.valueOf(dateHandler.getMinutes()));
         spentTime.setText(dateHandler.getSpentTime());
 
         if (dateHandler.getSpentTimeFromLastVisit() != null) {
@@ -89,6 +104,31 @@ public class DateActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.actions_menu_set_deadline:
                 dateHandler.dateTimePicker(this);
+                break;
+            case R.id.actions_menu_delete:
+                final AlertDialog.Builder ad = new AlertDialog.Builder(DateActivity.this);
+                ad.setTitle("Delete this contact");
+                ad.setMessage("Are you sure?");
+                ad.setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                    }
+                });
+                ad.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int arg1) {
+                        Intent intent = new Intent();
+                        intent.putExtra(NAME_DEADLINE_COUNTER, name);
+                        dateHandler.deleteAllData();
+                        Toast.makeText(DateActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                        setResult(MainActivity.RESULT_DELETE_CONTACT, intent);
+                        finish();
+                    }
+                });
+                ad.setCancelable(true);
+                ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    public void onCancel(DialogInterface dialog) {
+                    }
+                });
+                ad.show();
                 break;
         }
         return super.onOptionsItemSelected(item);

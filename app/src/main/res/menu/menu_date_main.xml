@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".date.DateActivity">
     <item
         android:title="@string/set_deadline_time"
         android:id="@+id/actions_menu_set_deadline"/>
+    <item
+        android:title="@string/delete"
+        android:id="@+id/actions_menu_delete"/>
 </menu>

@@ -8,6 +8,8 @@ import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.pasha.deadlinecount.main.DeadlineCallbacks;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -26,6 +28,7 @@ public class DateHandler {
     private DataPref dataPref;
     private DateActivity view;
     private final String name;
+    private DeadlineCallbacks callbacks;
 
     public DateHandler(@NonNull final DataPref dataPref, @NonNull final String name) {
         this.dataPref = dataPref;
@@ -47,16 +50,19 @@ public class DateHandler {
         Log.d(TAG, "timeDeadline: " + timeDeadline / 1000);
     }
 
-    public int gerMinutes() {
-        return (int) ((timeDeadline - timeNow) / (60 * 1000));
+    public int getMinutes() {
+        if (timeDeadline < timeNow) return 0;
+        else return (int) ((timeDeadline - timeNow) / (60 * 1000));
     }
 
     public int getHours() {
-        return (int) ((timeDeadline - timeNow) / (3600 * 1000));
+        if (timeDeadline < timeNow) return 0;
+        else return (int) ((timeDeadline - timeNow) / (3600 * 1000));
     }
 
     public int getDays() {
-        return (int) ((timeDeadline - timeNow) / (3600 * 1000 * 24));
+        if (timeDeadline < timeNow) return 0;
+        else return (int) ((timeDeadline - timeNow) / (3600 * 1000 * 24));
     }
 
     public StringBuilder getSpentTimeFromLastVisit() {
@@ -76,11 +82,15 @@ public class DateHandler {
     }
 
     public StringBuilder getSpentTime() {
+        StringBuilder show = new StringBuilder();
+        if (timeDeadline < timeStart) {
+            show.append("You set passed date");
+            return show;
+        }
         long daySpend = ((timeNow - timeStart) / (3600 * 1000 * 24));
         long hourSpend = ((timeNow - timeStart) / (1000 * 3600) % 24);
         long minutesSpend = (((timeNow - timeStart) / (60 * 1000)) % 60);
         long secondSpend = (((timeNow - timeStart) / (1000))) % 60;
-        StringBuilder show = new StringBuilder();
         show.append(daySpend);
         show.append("d : ");
         show.append(hourSpend);
@@ -93,11 +103,23 @@ public class DateHandler {
     }
 
     public StringBuilder getTimeInGeneral() {
+        StringBuilder show = new StringBuilder();
         long daySpend = ((timeDeadline - timeNow) / (3600 * 1000 * 24));
         long hourSpend = (((timeDeadline - timeNow) / (1000 * 3600)) % 24);
         long minutesSpend = (((timeDeadline - timeNow) / (60 * 1000)) % 60);
         long secondSpend = (((timeDeadline - timeNow) / (1000))) % 60;
-        StringBuilder show = new StringBuilder();
+        if (timeDeadline < timeNow) {
+            show.append("Time is exceeded by:" + "\n");
+            show.append(Math.abs(daySpend));
+            show.append("d : ");
+            show.append(Math.abs(hourSpend));
+            show.append("h : ");
+            show.append(Math.abs(minutesSpend));
+            show.append("m : ");
+            show.append(Math.abs(secondSpend));
+            show.append("s");
+            return show;
+        }
         show.append(daySpend);
         show.append("d : ");
         show.append(hourSpend);
@@ -111,16 +133,26 @@ public class DateHandler {
 
     public double getProgress() {
         Log.d(TAG, "progress %: " + (timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
+        if (timeDeadline < timeNow) {
+            return 100.0;
+        }
         return 100.0 - ((timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
+    }
+
+    public void setCallbacks(DeadlineCallbacks callbacks) {
+        this.callbacks = callbacks;
     }
 
     public void loadNewDeadlineDate(GregorianCalendar calendar) {
         timeDeadline = calendar.getTimeInMillis();
-        timeStart = timeNow;
         timeSaved = timeNow;
         dataPref.saveLongData(timeDeadline, DEADLINE_PREF + name);
-        dataPref.saveLongData(timeNow, START_PREF + name);
-        view.setDate();
+        if (view != null) {
+            view.setDate();
+        } else {
+            dataPref.saveLongData(timeNow, START_PREF + name);
+            callbacks.onCreateDateActivity();
+        }
         Log.d(TAG, "General time: " + calendar.getTime());
     }
 
@@ -161,5 +193,11 @@ public class DateHandler {
 
     public void attachView(final DateActivity view) {
         this.view = view;
+    }
+
+    public void deleteAllData() {
+        dataPref.deleteStringData(SAVE_PREF + name);
+        dataPref.deleteStringData(DEADLINE_PREF + name);
+        dataPref.deleteStringData(START_PREF + name);
     }
 }

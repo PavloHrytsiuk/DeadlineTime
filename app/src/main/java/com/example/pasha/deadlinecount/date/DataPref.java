@@ -26,7 +26,7 @@ public class DataPref {
         return preferences.getLong(name, 0);
     }
 
-    public void saveSringData(@NonNull String data, @NonNull String name) {
+    public void saveStringData(@NonNull String data, @NonNull String name) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor shEd = preferences.edit();
         shEd.putString(name, data);
@@ -36,5 +36,10 @@ public class DataPref {
     public String loadStringData(@NonNull String name) {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
         return preferences.getString(name, "");
+    }
+
+    public void deleteStringData(@NonNull String name) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        preferences.edit().remove(name).apply();
     }
 }
