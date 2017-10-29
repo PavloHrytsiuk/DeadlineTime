@@ -3,8 +3,8 @@ package com.example.pasha.deadlinecount.date;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
@@ -41,6 +41,8 @@ public class DateActivity extends AppCompatActivity {
     TextView textView;
 
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
+    private static final String DESCRIPTION_DEADLINE_COUNTER = "Description of deadline counter";
+    private static final String SAVE_DESCRIPTION = "Save description";
 
     private DataPref dataPref;
     private DateHandler dateHandler;
@@ -52,15 +54,22 @@ public class DateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_date);
         ButterKnife.bind(this);
         name = getIntent().getStringExtra(NAME_DEADLINE_COUNTER);
-        //setTitle(name);
-        textView.setText(name);
-
         dataPref = new DataPref(this);
         dateHandler = new DateHandler(dataPref, name);
         dateHandler.attachView(this);
 
+        String description;
+        if ((description = getIntent().getStringExtra(DESCRIPTION_DEADLINE_COUNTER)) != null) {
+            textView.setText(description);
+            dataPref.saveStringData(description, SAVE_DESCRIPTION + name);
+        } else {
+            String buf = dataPref.loadStringData(SAVE_DESCRIPTION + name);
+            if (!buf.isEmpty()) {
+                textView.setText(buf);
+            } else textView.setText(name);
+        }
+        setTitle(name);
         setDate();
-
         dataPref.saveLongData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF + name);
     }
 

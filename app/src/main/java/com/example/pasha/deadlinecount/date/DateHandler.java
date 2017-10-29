@@ -28,7 +28,7 @@ public class DateHandler {
     private DataPref dataPref;
     private DateActivity view;
     private final String name;
-    DeadlineCallbacks callbacks;
+    private DeadlineCallbacks callbacks;
 
     public DateHandler(@NonNull final DataPref dataPref, @NonNull final String name) {
         this.dataPref = dataPref;
