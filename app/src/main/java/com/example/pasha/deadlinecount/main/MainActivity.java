@@ -10,11 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pasha.deadlinecount.R;
@@ -26,7 +29,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     private static final String DEADLINE_PREF = "Json from deadline names";
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
     public static final int RESULT_DELETE_CONTACT = 1;
+    private static final String DESCRIPTION_DEADLINE_COUNTER = "Description of deadline counter";
 
     @BindView(R.id.recycleView)
     RecyclerView recyclerView;
@@ -45,7 +48,8 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     private DataPref dataPref;
     private Gson gson;
     private DateHandler dateHandler;
-    private String editTextValue;
+    private String editTextName;
+    private String editTextDescription;
     private DeadlinesAdapter adapter;
 
 
@@ -60,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         Type type = new TypeToken<List<String>>() {
         }.getType();
         deadlineNames = gson.fromJson(dataPref.loadStringData(DEADLINE_PREF), type);
-        Log.d("TAG", "ArrayListLoad = " + Arrays.asList(deadlineNames));
-        Log.d("TAG", "jsonLoad = " + dataPref.loadStringData(DEADLINE_PREF));
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
@@ -81,14 +83,31 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         switch (item.getItemId()) {
             case R.id.action_Add:
 
-                final EditText editText = new EditText(MainActivity.this);
-                editText.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                final EditText editName = new EditText(MainActivity.this);
+                final EditText editDescription = new EditText(MainActivity.this);
+                editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+                editName.setInputType(android.text.InputType.TYPE_CLASS_TEXT
                         | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                editText.setFilters(new InputFilter[] {new InputFilter.LengthFilter(100)});
+                editName.setSingleLine(true);
+                editDescription.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                final TextView textViewMessageOne = new TextView(MainActivity.this);
+                textViewMessageOne.setText("(name)");
+                final TextView textViewMessageTwo = new TextView(MainActivity.this);
+                textViewMessageTwo.setText("(description)");
+                textViewMessageOne.setGravity(Gravity.CENTER_HORIZONTAL);
+                textViewMessageTwo.setGravity(Gravity.CENTER_HORIZONTAL);
+
+                LinearLayout ll = new LinearLayout(this);
+                ll.setOrientation(LinearLayout.VERTICAL);
+                ll.addView(editName);
+                ll.addView(textViewMessageOne);
+                ll.addView(editDescription);
+                ll.addView(textViewMessageTwo);
+
                 final AlertDialog dialog = new AlertDialog.Builder(this)
-                        .setView(editText)
+                        .setView(ll)
                         .setTitle("Create new deadline counter")
-                        .setMessage("Please press description:")
                         .setNegativeButton("No", null)
                         .setPositiveButton("Yes", null)
                         .create();
@@ -101,16 +120,17 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
                             @Override
                             public void onClick(View view) {
 
-                                editTextValue = editText.getText().toString().trim();
-                                if (editTextValue.length() == 0) {
+                                editTextName = editName.getText().toString().trim();
+                                editTextDescription = editDescription.getText().toString().trim();
+                                if (editTextName.length() == 0) {
                                     Toast.makeText(MainActivity.this, "Description is empty!" + "\n" +
                                             "Please try again", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    if (deadlineNames.contains(editTextValue)) {
+                                    if (deadlineNames.contains(editTextName)) {
                                         Toast.makeText(MainActivity.this, "Already exist!" + "\n" +
                                                 "Please try again", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        dateHandler = new DateHandler(dataPref, editTextValue);
+                                        dateHandler = new DateHandler(dataPref, editTextName);
                                         dateHandler.setCallbacks(MainActivity.this);
                                         dateHandler.dateTimePicker(MainActivity.this);
                                         dialog.dismiss();
@@ -154,10 +174,11 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
     @Override
     public void onCreateDateActivity() {
-        deadlineNames.add(editTextValue);
+        deadlineNames.add(editTextName);
         saveChanges();
         Intent intent = new Intent(MainActivity.this, DateActivity.class);
-        intent.putExtra(NAME_DEADLINE_COUNTER, editTextValue);
+        intent.putExtra(NAME_DEADLINE_COUNTER, editTextName);
+        intent.putExtra(DESCRIPTION_DEADLINE_COUNTER, editTextDescription);
         startActivityForResult(intent, 1);
     }
 }
