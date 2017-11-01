@@ -60,14 +60,13 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         ButterKnife.bind(this);
         dataPref = new DataPref(this);
         gson = new Gson();
-
         Type type = new TypeToken<List<String>>() {
         }.getType();
         deadlineNames = gson.fromJson(dataPref.loadStringData(DEADLINE_PREF), type);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
-        adapter = new DeadlinesAdapter(deadlineNames, this);
+        adapter = new DeadlinesAdapter(deadlineNames, this, dataPref);
         recyclerView.setAdapter(adapter);
     }
 
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
                 final EditText editName = new EditText(MainActivity.this);
                 final EditText editDescription = new EditText(MainActivity.this);
-                editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+                editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(25)});
                 editName.setInputType(android.text.InputType.TYPE_CLASS_TEXT
                         | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 editName.setSingleLine(true);
@@ -123,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
                                 editTextName = editName.getText().toString().trim();
                                 editTextDescription = editDescription.getText().toString().trim();
                                 if (editTextName.length() == 0) {
-                                    Toast.makeText(MainActivity.this, "Description is empty!" + "\n" +
+                                    Toast.makeText(MainActivity.this, "Name is empty!" + "\n" +
                                             "Please try again", Toast.LENGTH_SHORT).show();
                                 } else {
                                     if (deadlineNames.contains(editTextName)) {
