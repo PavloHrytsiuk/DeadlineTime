@@ -1,5 +1,6 @@
 package com.example.pasha.deadlinecount.main;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,16 +21,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class DeadlinesAdapter extends RecyclerView.Adapter<DeadlinesAdapter.PersonViewHolder> {
+public final class DeadlinesAdapter extends RecyclerView.Adapter<DeadlinesAdapter.PersonViewHolder> {
 
     private static final String START_PREF = "Start data";
     private static final String DEADLINE_PREF = "Deadline data";
 
-    private List<String> deadlineNames;
-    private DeadlineCallbacks callbacks;
-    private DataPref dataPref;
+    private final List<String> deadlineNames;
+    private final DeadlineCallbacks callbacks;
+    private final DataPref dataPref;
 
-    public DeadlinesAdapter(List<String> deadlineNames, DeadlineCallbacks callbacks, DataPref dataPref) {
+    public DeadlinesAdapter(@NonNull final List<String> deadlineNames,
+                            @NonNull final DeadlineCallbacks callbacks,
+                            @NonNull final DataPref dataPref) {
         this.deadlineNames = deadlineNames;
         this.callbacks = callbacks;
         this.dataPref = dataPref;
@@ -37,14 +40,14 @@ public class DeadlinesAdapter extends RecyclerView.Adapter<DeadlinesAdapter.Pers
 
 
     @Override
-    public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PersonViewHolder onCreateViewHolder(@NonNull final ViewGroup parent, final int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.deadlines_item,
                 parent, false);
         return new PersonViewHolder(view, callbacks);
     }
 
     @Override
-    public void onBindViewHolder(PersonViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PersonViewHolder holder, final int position) {
         holder.textView.setText(deadlineNames.get(position));
         try {
             Long bufStart = dataPref.loadLongData(START_PREF + deadlineNames.get(position));
@@ -70,12 +73,12 @@ public class DeadlinesAdapter extends RecyclerView.Adapter<DeadlinesAdapter.Pers
         @BindView(R.id.item_date)
         TextView dateView;
 
-        PersonViewHolder(View itemView, final DeadlineCallbacks callbacks) {
+        PersonViewHolder(@NonNull final View itemView, @NonNull final DeadlineCallbacks callbacks) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(@NonNull final View view) {
                     callbacks.onClick(getAdapterPosition());
                 }
             });

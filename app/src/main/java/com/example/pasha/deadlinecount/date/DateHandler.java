@@ -16,10 +16,9 @@ import java.util.GregorianCalendar;
 public class DateHandler {
 
     static final String SAVE_PREF = "Save data";
-    static final String DEADLINE_PREF = "Deadline data";
-    static final String START_PREF = "Start data";
+    private static final String DEADLINE_PREF = "Deadline data";
+    private static final String START_PREF = "Start data";
 
-    private static final String TAG = "TAG";
     private final Calendar dateNow;
     private long timeSaved;
     private final long timeNow;
@@ -46,8 +45,6 @@ public class DateHandler {
         if ((timeStart = dataPref.loadLongData(START_PREF + name)) == 0) {
             timeStart = timeNow;
         }
-        Log.d(TAG, "timeNow: " + timeNow / 1000);
-        Log.d(TAG, "timeDeadline: " + timeDeadline / 1000);
     }
 
     public int getMinutes() {
@@ -132,18 +129,17 @@ public class DateHandler {
     }
 
     public double getProgress() {
-        Log.d(TAG, "progress %: " + (timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
         if (timeDeadline < timeNow) {
             return 100.0;
         }
         return 100.0 - ((timeDeadline - timeNow) * 100.0 / (timeDeadline - timeStart));
     }
 
-    public void setCallbacks(DeadlineCallbacks callbacks) {
+    public void setCallbacks(@NonNull final DeadlineCallbacks callbacks) {
         this.callbacks = callbacks;
     }
 
-    public void loadNewDeadlineDate(GregorianCalendar calendar) {
+    private void loadNewDeadlineDate(@NonNull final GregorianCalendar calendar) {
         timeDeadline = calendar.getTimeInMillis();
         timeSaved = timeNow;
         dataPref.saveLongData(timeDeadline, DEADLINE_PREF + name);
@@ -153,10 +149,9 @@ public class DateHandler {
             dataPref.saveLongData(timeNow, START_PREF + name);
             callbacks.onCreateDateActivity();
         }
-        Log.d(TAG, "General time: " + calendar.getTime());
     }
 
-    public void dateTimePicker(final Context context) {
+    public void dateTimePicker(@NonNull final Context context) {
 
         // Get Current Date
         final int mYear = dateNow.get(Calendar.YEAR);
@@ -170,19 +165,17 @@ public class DateHandler {
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
-                    public void onDateSet(DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
+                    public void onDateSet(@NonNull final DatePicker view, final int year, final int monthOfYear, final int dayOfMonth) {
 
-                        Log.d(TAG, "date_time: " + dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                         // Launch Time Picker Dialog
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
 
                                     @Override
-                                    public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
+                                    public void onTimeSet(@NonNull final TimePicker view, final int hourOfDay, final int minute) {
 
                                         calendar.set(year, monthOfYear, dayOfMonth, hourOfDay, minute, 0);
                                         loadNewDeadlineDate(calendar);
-                                        Log.d(TAG, "mHour/mMinute: " + mHour + " : " + mMinute);
                                     }
                                 }, mHour, mMinute, true);
                         timePickerDialog.show();
@@ -191,7 +184,7 @@ public class DateHandler {
         datePickerDialog.show();
     }
 
-    public void attachView(final DateActivity view) {
+    public void attachView(@NonNull final DateActivity view) {
         this.view = view;
     }
 

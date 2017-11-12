@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -26,7 +28,7 @@ import java.util.GregorianCalendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DateActivity extends AppCompatActivity {
+public final class DateActivity extends AppCompatActivity {
 
     @BindView(R.id.daysView)
     TextView daysView;
@@ -54,9 +56,10 @@ public class DateActivity extends AppCompatActivity {
     private DataPref dataPref;
     private DateHandler dateHandler;
     private String name;
+    private boolean changeDesc = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date);
         ButterKnife.bind(this);
@@ -88,7 +91,7 @@ public class DateActivity extends AppCompatActivity {
 
         descriptionView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
+            public boolean onTouch(@NonNull final View view, @NonNull final MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     if (motionEvent.getRawX() > (view.getWidth() - view.getPaddingRight())) {
                         dataPref.saveStringData(String.valueOf(descriptionView.getText()), SAVE_DESCRIPTION + name);
@@ -101,6 +104,7 @@ public class DateActivity extends AppCompatActivity {
 
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        changeDesc = false;
                     }
                 }
                 return false;
@@ -109,7 +113,7 @@ public class DateActivity extends AppCompatActivity {
 
         descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public boolean onLongClick(@NonNull final View view) {
                 Drawable x = ContextCompat.getDrawable(DateActivity.this, R.drawable.ic_done_black_18dp);
                 x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
                 descriptionView.setCompoundDrawables(null, null, x, null);
@@ -121,6 +125,7 @@ public class DateActivity extends AppCompatActivity {
                 descriptionView.setEnabled(true);
                 descriptionView.setFocusableInTouchMode(true);
                 descriptionView.requestFocus();
+                changeDesc = true;
                 return true;
             }
         });
@@ -146,13 +151,13 @@ public class DateActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_date_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.actions_menu_set_deadline:
@@ -185,5 +190,13 @@ public class DateActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (changeDesc) {
+            dataPref.saveStringData(String.valueOf(descriptionView.getText()), SAVE_DESCRIPTION + name);
+        }
+        super.onDestroy();
     }
 }
