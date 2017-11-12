@@ -4,17 +4,22 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -57,6 +62,8 @@ public final class DateActivity extends AppCompatActivity {
     private DateHandler dateHandler;
     private String name;
     private boolean changeDesc = false;
+    private int iconWidth;
+    private int iconHeight;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -74,6 +81,7 @@ public final class DateActivity extends AppCompatActivity {
     }
 
     private void setDescription() {
+
         String description = getIntent().getStringExtra(DESCRIPTION_DEADLINE_COUNTER);
         if (description != null) {
             descriptionView.setText(description);
@@ -92,19 +100,30 @@ public final class DateActivity extends AppCompatActivity {
         descriptionView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(@NonNull final View view, @NonNull final MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (motionEvent.getRawX() > (view.getWidth() - view.getPaddingRight())) {
-                        dataPref.saveStringData(String.valueOf(descriptionView.getText()), SAVE_DESCRIPTION + name);
-                        Toast.makeText(getBaseContext(), "Saved", Toast.LENGTH_SHORT).show();
-                        descriptionView.setFocusable(false);
-                        descriptionView.setClickable(false);
-                        descriptionView.setFocusableInTouchMode(false);
-                        descriptionView.clearFocus();
-                        descriptionView.setCompoundDrawables(null, null, null, null);
+                if (changeDesc && motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    Log.d("Tag", "getY " + motionEvent.getY());
+                    Log.d("Tag", "getX " + motionEvent.getX());
+                    Log.d("Tag", "getHeight " + (view.getHeight() - view.getPaddingBottom()
+                            - iconHeight));
+                    Log.d("Tag", "getWight " + (view.getWidth() - view.getPaddingRight()
+                            - iconWidth));
+                    if (motionEvent.getY() > (view.getHeight() - view.getPaddingBottom()
+                            - iconHeight)) {
+                        if (motionEvent.getX() > (view.getWidth() - view.getPaddingRight()
+                                - iconWidth)) {
+                            dataPref.saveStringData(String.valueOf(descriptionView.getText()),
+                                    SAVE_DESCRIPTION + name);
+                            Toast.makeText(getBaseContext(), "Saved", Toast.LENGTH_SHORT).show();
+                            descriptionView.setFocusable(false);
+                            descriptionView.setClickable(false);
+                            descriptionView.setFocusableInTouchMode(false);
+                            descriptionView.clearFocus();
+                            descriptionView.setCompoundDrawables(null, null, null, null);
 
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        changeDesc = false;
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                            changeDesc = false;
+                        }
                     }
                 }
                 return false;
@@ -114,9 +133,15 @@ public final class DateActivity extends AppCompatActivity {
         descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(@NonNull final View view) {
-                Drawable x = ContextCompat.getDrawable(DateActivity.this, R.drawable.ic_done_black_18dp);
-                x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
-                descriptionView.setCompoundDrawables(null, null, x, null);
+
+                final Bitmap bitmap = BitmapFactory.decodeResource(descriptionView.getResources(),
+                        R.drawable.ic_done_black_18dp);
+                Log.d("Tag", "Intrinsic " + bitmap.getWidth() + "--" + bitmap.getHeight());
+                loadIconSize(bitmap.getWidth(), bitmap.getHeight());
+                TopGravityDrawable icon = new TopGravityDrawable(descriptionView.getResources(),
+                        bitmap);
+                descriptionView.setCompoundDrawablesWithIntrinsicBounds(null, null,
+                        icon, null);
 
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -150,6 +175,11 @@ public final class DateActivity extends AppCompatActivity {
         progressTextView.setText(progress);
     }
 
+    private void loadIconSize(final int width, final int height) {
+        iconHeight = height;
+        iconWidth = width;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_date_main, menu);
@@ -164,32 +194,51 @@ public final class DateActivity extends AppCompatActivity {
                 dateHandler.dateTimePicker(this);
                 break;
             case R.id.actions_menu_delete:
-                final AlertDialog.Builder ad = new AlertDialog.Builder(DateActivity.this);
-                ad.setTitle("Delete this contact");
-                ad.setMessage("Are you sure?");
-                ad.setPositiveButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
+                final AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle("Delete this contact")
+                        .setNegativeButton("No", null)
+                        .setPositiveButton("Yes", null)
+                        .setMessage("Are you sure?")
+                        .create();
+
+                dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(@NonNull final DialogInterface dialogInterface) {
+                        Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(@NonNull final View view) {
+                                Intent intent = new Intent();
+                                intent.putExtra(NAME_DEADLINE_COUNTER, name);
+                                dateHandler.deleteAllData();
+                                Toast.makeText(DateActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                setResult(MainActivity.RESULT_DELETE_CONTACT, intent);
+                                finish();
+                                dialog.dismiss();
+                            }
+                        });
                     }
                 });
-                ad.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int arg1) {
-                        Intent intent = new Intent();
-                        intent.putExtra(NAME_DEADLINE_COUNTER, name);
-                        dateHandler.deleteAllData();
-                        Toast.makeText(DateActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                        setResult(MainActivity.RESULT_DELETE_CONTACT, intent);
-                        finish();
-                    }
-                });
-                ad.setCancelable(true);
-                ad.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    public void onCancel(DialogInterface dialog) {
-                    }
-                });
-                ad.show();
-                break;
+                dialog.show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class TopGravityDrawable extends BitmapDrawable {
+
+        private TopGravityDrawable(@NonNull final Resources res, @NonNull final Bitmap bitmap) {
+            super(res, bitmap);
+        }
+
+        @Override
+        public void draw(@NonNull final Canvas canvas) {
+            int halfCanvas = canvas.getHeight() / 2;
+            int halfDrawable = getIntrinsicHeight() / 2;
+            canvas.save();
+            canvas.translate(0, +halfCanvas - halfDrawable * 2);
+            super.draw(canvas);
+            canvas.restore();
+        }
     }
 
     @Override
