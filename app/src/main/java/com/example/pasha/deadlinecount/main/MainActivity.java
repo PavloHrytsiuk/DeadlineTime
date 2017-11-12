@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements DeadlineCallbacks {
+public final class MainActivity extends AppCompatActivity implements DeadlineCallbacks {
 
     private static final String DEADLINE_PREF = "Json from deadline names";
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -71,13 +73,13 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(@NonNull final Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.action_Add:
@@ -86,10 +88,12 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
                 final EditText editDescription = new EditText(MainActivity.this);
                 editName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(25)});
                 editName.setInputType(android.text.InputType.TYPE_CLASS_TEXT
-                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                        | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 editName.setSingleLine(true);
                 editDescription.setInputType(android.text.InputType.TYPE_CLASS_TEXT
-                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                        | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 final TextView textViewMessageOne = new TextView(MainActivity.this);
                 textViewMessageOne.setText("(name)");
                 final TextView textViewMessageTwo = new TextView(MainActivity.this);
@@ -113,11 +117,11 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
 
                 dialog.setOnShowListener(new DialogInterface.OnShowListener() {
                     @Override
-                    public void onShow(DialogInterface dialogInterface) {
+                    public void onShow(@NonNull final DialogInterface dialogInterface) {
                         Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View view) {
+                            public void onClick(@NonNull final View view) {
 
                                 editTextName = editName.getText().toString().trim();
                                 editTextDescription = editDescription.getText().toString().trim();
@@ -145,11 +149,14 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(final int requestCode, final int resultCode,
+                                    @Nullable final Intent data) {
+
         if (data == null) {
             return;
         }
+
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESULT_DELETE_CONTACT) {
             deadlineNames.remove(data.getStringExtra(NAME_DEADLINE_COUNTER));
             deadlineNames.remove(data.getStringExtra(NAME_DEADLINE_COUNTER));
@@ -161,11 +168,10 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
     private void saveChanges() {
         String jsonDeadlineNames = gson.toJson(deadlineNames);
         dataPref.saveStringData(jsonDeadlineNames, DEADLINE_PREF);
-        Log.d("TAG", "jsonSave = " + jsonDeadlineNames);
     }
 
     @Override
-    public void onClick(int position) {
+    public void onClick(final int position) {
         Intent intent = new Intent(MainActivity.this, DateActivity.class);
         intent.putExtra(NAME_DEADLINE_COUNTER, deadlineNames.get(position));
         startActivityForResult(intent, 1);
