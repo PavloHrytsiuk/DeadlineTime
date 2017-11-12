@@ -1,12 +1,19 @@
 package com.example.pasha.deadlinecount.date;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +44,8 @@ public class DateActivity extends AppCompatActivity {
     TextView progressTextView;
     @BindView(R.id.spendTimeView)
     TextView spentTime;
-    @BindView(R.id.textView)
-    TextView textView;
+    @BindView(R.id.descriptionView)
+    EditText descriptionView;
 
     private static final String NAME_DEADLINE_COUNTER = "Name of deadline counter";
     private static final String DESCRIPTION_DEADLINE_COUNTER = "Description of deadline counter";
@@ -57,20 +64,66 @@ public class DateActivity extends AppCompatActivity {
         dataPref = new DataPref(this);
         dateHandler = new DateHandler(dataPref, name);
         dateHandler.attachView(this);
-
-        String description;
-        if ((description = getIntent().getStringExtra(DESCRIPTION_DEADLINE_COUNTER)) != null) {
-            textView.setText(description);
-            dataPref.saveStringData(description, SAVE_DESCRIPTION + name);
-        } else {
-            String buf = dataPref.loadStringData(SAVE_DESCRIPTION + name);
-            if (!buf.isEmpty()) {
-                textView.setText(buf);
-            } else textView.setText(name);
-        }
+        setDescription();
         setTitle(name);
         setDate();
         dataPref.saveLongData(new GregorianCalendar().getTimeInMillis(), DateHandler.SAVE_PREF + name);
+    }
+
+    private void setDescription() {
+        String description = getIntent().getStringExtra(DESCRIPTION_DEADLINE_COUNTER);
+        if (description != null) {
+            descriptionView.setText(description);
+            dataPref.saveStringData(description, SAVE_DESCRIPTION + name);
+        } else {
+            description = dataPref.loadStringData(SAVE_DESCRIPTION + name);
+            if (description != null && !description.isEmpty()) {
+                descriptionView.setText(description);
+            } else descriptionView.setText(name);
+        }
+        descriptionView.setFocusable(false);
+        descriptionView.setClickable(false);
+        descriptionView.setFocusableInTouchMode(false);
+        descriptionView.clearFocus();
+
+        descriptionView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (motionEvent.getRawX() > (view.getWidth() - view.getPaddingRight())) {
+                        dataPref.saveStringData(String.valueOf(descriptionView.getText()), SAVE_DESCRIPTION + name);
+                        Toast.makeText(getBaseContext(), "Saved", Toast.LENGTH_SHORT).show();
+                        descriptionView.setFocusable(false);
+                        descriptionView.setClickable(false);
+                        descriptionView.setFocusableInTouchMode(false);
+                        descriptionView.clearFocus();
+                        descriptionView.setCompoundDrawables(null, null, null, null);
+
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                }
+                return false;
+            }
+        });
+
+        descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Drawable x = ContextCompat.getDrawable(DateActivity.this, R.drawable.ic_done_black_18dp);
+                x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
+                descriptionView.setCompoundDrawables(null, null, x, null);
+
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                descriptionView.setFocusable(true);
+                descriptionView.setEnabled(true);
+                descriptionView.setFocusableInTouchMode(true);
+                descriptionView.requestFocus();
+                return true;
+            }
+        });
     }
 
     public void setDate() {

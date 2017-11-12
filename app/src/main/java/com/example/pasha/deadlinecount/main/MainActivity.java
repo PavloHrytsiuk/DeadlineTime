@@ -177,7 +177,9 @@ public class MainActivity extends AppCompatActivity implements DeadlineCallbacks
         saveChanges();
         Intent intent = new Intent(MainActivity.this, DateActivity.class);
         intent.putExtra(NAME_DEADLINE_COUNTER, editTextName);
-        intent.putExtra(DESCRIPTION_DEADLINE_COUNTER, editTextDescription);
+        if (!editTextDescription.isEmpty()) {
+            intent.putExtra(DESCRIPTION_DEADLINE_COUNTER, editTextDescription);
+        }
         startActivityForResult(intent, 1);
     }
 }
