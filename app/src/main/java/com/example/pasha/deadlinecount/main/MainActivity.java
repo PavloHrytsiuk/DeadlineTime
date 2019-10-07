@@ -65,6 +65,10 @@ public final class MainActivity extends AppCompatActivity implements DeadlineCal
         }.getType();
         deadlineNames = gson.fromJson(dataPref.loadStringData(DEADLINE_PREF), type);
 
+        if (deadlineNames == null) {
+            //todo
+        }
+
         LinearLayoutManager llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
         adapter = new DeadlinesAdapter(deadlineNames, this, dataPref);
